@@ -1,0 +1,48 @@
+services:
+
+    larademo-nginx:
+        image: nginx:1.27
+        container_name: larademo-nginx
+        ports:
+            - '80:80'
+        volumes:
+            - ./:/home/web/
+            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+            - larademo-php-fpm
+
+    larademo-php-fpm:
+        image: mrzabby/php:8.4-fpm
+        build:
+            context: ./docker/
+            dockerfile: files/php-fpm.df
+        container_name: larademo-php-fpm
+        user: "1000:33"
+        volumes:
+            - ./:/home/web/
+        depends_on:
+            - larademo-mariadb
+
+    larademo-mariadb:
+        image: mariadb:10.11
+        container_name: larademo-mariadb
+        environment:
+            MARIADB_DATABASE: ${DB_DATABASE}
+            MARIADB_USER: ${DB_USERNAME}
+            MARIADB_PASSWORD: ${DB_PASSWORD}
+            MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+        volumes:
+            - larademo_db:/var/lib/mysql/
+
+    larademo-pma:
+        image: phpmyadmin:5.2.1
+        container_name: larademo-pma
+        ports:
+            -  '8080:80'
+        environment:
+            - PMA_ARBITRARY=0
+            - PMA_HOST=larademo-mariadb
+            - PMA_VERBOSE=Laravel Demo MariaDB
+
+volumes:
+    larademo_db:
