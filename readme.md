@@ -2,6 +2,15 @@
 
 File examples, that can be used to run Laravel app on your host system, using Docker.
 
+## Usage
+
+> Check out [YouTube](https://youtu.be/n9ZubBaWsgE) for more details.
+
+* Copy or symlink `docker` directory to your project root;
+* Copy `docker-compose.yml` file to your project root;
+* Sync docker compose file with your `.env`;
+* To get your user ID run `id` command.
+
 ## Commands
 
 ```shell
